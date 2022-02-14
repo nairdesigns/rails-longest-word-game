@@ -7,7 +7,7 @@ class GamesController < ApplicationController
   end
 
   def score
-    url = URI('https://wagon-dictionary.herokuapp.com/hey')
+    url = URI("https://wagon-dictionary.herokuapp.com/#{params[:score]}")
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
@@ -19,5 +19,10 @@ class GamesController < ApplicationController
 
     @response = http.request(request)
     @hash = JSON.parse @response.body.gsub('=>', ':')
+    @answer = if @hash['found'] == true
+                'correct! you win'
+              else
+                "nice try! #{@hash['word']} wasn't a word!"
+              end
   end
 end
